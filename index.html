@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayolis Design | El Yapımı Kadın Çantaları</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Configuration & Styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-light': '#FDFBF7',
+                        'brand-dark': '#2C2A29',
+                        'brand-accent': '#C1A68D',
+                        'brand-muted': '#8E8B87'
+                    },
+                    fontFamily: {
+                        sans: ['Jost', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FDFBF7; }
+        ::-webkit-scrollbar-thumb { background: #C1A68D; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a88e75; }
+
+        /* Hide scrollbar for category filter but allow scroll */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Toast animation */
+        @keyframes slideInUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-brand-light text-brand-dark font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- Navigation -->
+    <header class="fixed w-full top-0 z-40 bg-brand-light/90 backdrop-blur-md border-b border-brand-accent/20 transition-all duration-300" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="text-brand-dark hover:text-brand-accent focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center justify-center md:justify-start w-full md:w-auto">
+                    <a href="#" class="flex items-center gap-3 group">
+                        <svg class="w-10 h-10 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30 12L16 48H22L30 25L38 48H44L30 12Z" fill="currentColor" class="text-brand-dark"/>
+                            <path d="M25 38H35" stroke="currentColor" stroke-width="2" class="text-brand-accent"/>
+                            <circle cx="30" cy="30" r="28" stroke="currentColor" stroke-width="1.5" class="text-brand-accent"/>
+                        </svg>
+                        <div class="flex flex-col justify-center">
+                            <span class="font-serif text-2xl tracking-[0.25em] text-brand-dark uppercase leading-none mb-1 mt-1">Ayolis</span>
+                            <span class="font-sans text-[0.65rem] tracking-[0.4em] text-brand-muted uppercase leading-none">Design</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-10 items-center">
+                    <a href="#home" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Ana Sayfa</a>
+                    <a href="#catalogue" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Katalog</a>
+                    <a href="#craft" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Zanaatımız</a>
+                    <a href="#social" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Sosyal Medya</a>
+                </nav>
+
+                <!-- Icons (Search, Cart) -->
+                <div class="flex items-center space-x-4">
+                    <button class="text-brand-dark hover:text-brand-accent transition-colors" onclick="showToast('Arama özelliği yakında eklenecek!')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </button>
+                    <button class="text-brand-dark hover:text-brand-accent transition-colors relative" onclick="showToast('Alışveriş çantası açıldı')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        <span class="absolute -top-1 -right-1 bg-brand-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-light border-b border-brand-accent/20 absolute w-full">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="#home" class="block px-3 py-3 text-base uppercase tracking-widest border-b border-gray-100" onclick="toggleMobileMenu()">Ana Sayfa</a>
+                <a href="#catalogue" class="block px-3 py-3 text-base uppercase tracking-widest border-b border-gray-100" onclick="toggleMobileMenu()">Katalog</a>
+                <a href="#craft" class="block px-3 py-3 text-base uppercase tracking-widest border-b border-gray-100" onclick="toggleMobileMenu()">Zanaatımız</a>
+                <a href="#social" class="block px-3 py-3 text-base uppercase tracking-widest" onclick="toggleMobileMenu()">Sosyal Medya</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center mt-10 md:mt-0">
+        <!-- Background Image (Using a high-quality fashion bag placeholder) -->
+        <div class="absolute inset-0 w-full h-full">
+            <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1920&q=80" alt="Zarif El Yapımı Deri Çanta" class="w-full h-full object-cover object-center" />
+            <!-- Overlay for text readability -->
+            <div class="absolute inset-0 bg-black/30"></div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <span class="block text-white/90 text-sm md:text-base uppercase tracking-[0.3em] mb-4">Yeni Koleksiyon</span>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 drop-shadow-lg">Zanaatkar Zarafeti</h1>
+            <p class="text-white/90 text-lg md:text-xl font-light mb-10 max-w-2xl mx-auto drop-shadow">Özenle el yapımı kadın çantaları. Orijinal materyaller, zamansız tasarım, modern ilham perileri için tasarlandı.</p>
+            <a href="#catalogue" class="inline-block bg-white text-brand-dark px-10 py-4 uppercase tracking-widest text-sm hover:bg-brand-accent hover:text-white transition-all duration-300">
+                Kataloğu Keşfet
+            </a>
+        </div>
+    </section>
+
+    <!-- Catalogue Section -->
+    <section id="catalogue" class="py-24 bg-brand-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-4">Katalog</h2>
+                <p class="text-brand-muted max-w-2xl mx-auto">El yapımı özel parçalarımızı keşfedin. Mükemmel yol arkadaşınızı bulmak için stile göre filtreleyin.</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex justify-center mb-12">
+                <div class="flex space-x-6 overflow-x-auto no-scrollbar pb-2" id="filter-container">
+                    <button class="filter-btn active text-sm uppercase tracking-wider pb-1 border-b-2 border-brand-dark text-brand-dark transition-colors whitespace-nowrap" data-filter="all">Tüm Stiller</button>
+                    <button class="filter-btn text-sm uppercase tracking-wider pb-1 border-b-2 border-transparent text-brand-muted hover:text-brand-dark transition-colors whitespace-nowrap" data-filter="tote">Tote Çantalar</button>
+                    <button class="filter-btn text-sm uppercase tracking-wider pb-1 border-b-2 border-transparent text-brand-muted hover:text-brand-dark transition-colors whitespace-nowrap" data-filter="crossbody">Çapraz Askılı</button>
+                    <button class="filter-btn text-sm uppercase tracking-wider pb-1 border-b-2 border-transparent text-brand-muted hover:text-brand-dark transition-colors whitespace-nowrap" data-filter="clutch">Portföy Çantalar</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                <!-- Products will be injected here via JavaScript -->
+            </div>
+            
+            <div class="text-center mt-16">
+                <button class="border border-brand-dark text-brand-dark px-10 py-4 uppercase tracking-widest text-sm hover:bg-brand-dark hover:text-white transition-all duration-300" onclick="showToast('Daha fazla ürün yükleniyor...')">Daha Fazla Yükle</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details Modal -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden bg-brand-dark/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="bg-brand-light max-w-5xl w-full flex flex-col md:flex-row shadow-2xl relative transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="modal-content">
+            <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/50 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white z-10 transition-colors">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            
+            <div class="md:w-1/2 bg-gray-100 min-h-[400px] relative">
+                <img id="modal-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
+            </div>
+            
+            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-brand-light">
+                <span id="modal-material" class="text-brand-accent text-xs uppercase tracking-widest mb-2 block"></span>
+                <h2 id="modal-title" class="font-serif text-3xl md:text-4xl text-brand-dark mb-3"></h2>
+                <div class="border-b border-brand-accent/20 pb-4 mb-6">
+                    <span id="modal-order" class="text-brand-dark font-medium tracking-widest text-sm bg-brand-accent/10 px-3 py-1 inline-block"></span>
+                </div>
+                
+                <div class="space-y-4 mb-10">
+                    <p class="text-brand-dark font-medium text-sm uppercase tracking-widest">Zanaatkar Detayları</p>
+                    <p id="modal-description" class="text-gray-600 font-light text-sm leading-relaxed"></p>
+                </div>
+                
+                <button onclick="inquireOrder()" class="mt-auto bg-brand-dark text-white px-8 py-4 uppercase tracking-widest text-sm hover:bg-brand-accent transition-colors w-full flex items-center justify-center gap-3 border border-brand-dark hover:border-brand-accent">
+                    <i class="far fa-envelope"></i> Bu Parça Hakkında Bilgi Al
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Craft Section (About) -->
+    <section id="craft" class="py-24 bg-brand-dark text-brand-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 relative h-[500px] w-full overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&w=800&q=80" alt="Deri İşçiliği Süreci" class="w-full h-full object-cover object-center" />
+                </div>
+                <div class="order-1 lg:order-2">
+                    <span class="text-brand-accent text-sm uppercase tracking-widest mb-2 block">Mirasımız</span>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Tutkuyla El Yapımı</h2>
+                    <p class="text-gray-300 font-light mb-6 leading-relaxed">
+                        Her Ayolis Design çantası bir adanmışlık hikayesi anlatır. En iyi, etik olarak tedarik edilmiş sırçalı derileri ve sürdürülebilir malzemeleri seçmekten son dikişe kadar, zanaatkarlarımız her bir parçaya saatler süren titiz bir çalışma katar.
+                    </p>
+                    <p class="text-gray-300 font-light mb-10 leading-relaxed">
+                        Yavaş modaya inanıyoruz. Sadece zamana meydan okuyan değil, aynı zamanda yaşlandıkça daha da güzelleşen zamansız silüetler yaratıyoruz. Ayolis taşıdığınızda, bir sanat eseri taşırsınız.
+                    </p>
+                    <a href="#" class="inline-block border-b border-brand-accent text-brand-accent pb-1 uppercase tracking-wider text-sm hover:text-white hover:border-white transition-colors">Hikayemizi Oku</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social / Instagram Feed Section -->
+    <section id="social" class="py-24 bg-brand-light overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
+            <h2 class="font-serif text-3xl md:text-4xl text-brand-dark mb-4">Ayolis Kolektifine Katılın</h2>
+            <p class="text-brand-muted mb-6">Öne çıkmak için bizi Instagram'da etiketleyin: <a href="#" class="text-brand-accent hover:text-brand-dark transition-colors">@AyolisDesign</a></p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
+                    <i class="fab fa-pinterest-p"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Simulated Feed Grid -->
+        <div class="flex overflow-x-auto pb-8 snap-x snap-mandatory hide-scroll gap-4 px-4 md:grid md:grid-cols-4 md:gap-4 md:px-0 md:max-w-full md:overflow-visible">
+            <!-- Feed Item 1 -->
+            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+            <!-- Feed Item 2 -->
+            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+            <!-- Feed Item 3 -->
+            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+            <!-- Feed Item 4 -->
+            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <i class="fab fa-instagram text-white text-3xl"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark pt-20 pb-10 border-t border-gray-800 flex-grow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Brand Info -->
+                <div>
+                    <a href="#" class="flex items-center gap-3 group mb-6">
+                        <svg class="w-10 h-10 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30 12L16 48H22L30 25L38 48H44L30 12Z" fill="currentColor" class="text-brand-light"/>
+                            <path d="M25 38H35" stroke="currentColor" stroke-width="2" class="text-brand-accent"/>
+                            <circle cx="30" cy="30" r="28" stroke="currentColor" stroke-width="1.5" class="text-brand-accent"/>
+                        </svg>
+                        <div class="flex flex-col justify-center">
+                            <span class="font-serif text-2xl tracking-[0.25em] text-brand-light uppercase leading-none mb-1 mt-1">Ayolis</span>
+                            <span class="font-sans text-[0.65rem] tracking-[0.4em] text-brand-muted uppercase leading-none">Design</span>
+                        </div>
+                    </a>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed mb-6">
+                        Modern kadın için zamansız zarafet üretiyoruz. Her dikiş, her detay sevgiyle elde yapıldı.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-brand-light font-serif text-lg mb-6">Keşfet</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Hikayemiz</a></li>
+                        <li><a href="#catalogue" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Katalog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Özel Siparişler</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Günlük</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Care -->
+                <div>
+                    <h4 class="text-brand-light font-serif text-lg mb-6">Müşteri Hizmetleri</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Bize Ulaşın</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Teslimat ve İadeler</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Deri Bakımı</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">SSS</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-brand-light font-serif text-lg mb-6">Bağlantıda Kalın</h4>
+                    <p class="text-gray-400 text-sm mb-4">Özel lansmanlar ve zanaatkar hikayeleri için bültenimize abone olun.</p>
+                    <form onsubmit="handleSubscribe(event)" class="flex border-b border-gray-600 pb-2">
+                        <input type="email" placeholder="E-posta Adresi" required class="bg-transparent border-none outline-none text-brand-light text-sm w-full placeholder-gray-500">
+                        <button type="submit" class="text-brand-accent hover:text-white uppercase text-xs tracking-widest transition-colors ml-2">Abone Ol</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-xs mb-4 md:mb-0">&copy; 2026 Ayolis Design. Tüm hakları saklıdır.</p>
+                <div class="flex space-x-4 text-gray-500 text-xs">
+                    <a href="#" class="hover:text-brand-light transition-colors">Gizlilik Politikası</a>
+                    <a href="#" class="hover:text-brand-light transition-colors">Hizmet Şartları</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Product Data
+        const products = [
+            {
+                id: 1,
+                name: "Klasik Deri Tote Çanta",
+                category: "tote",
+                orderNumber: "AYO-1042",
+                material: "Sırçalı İtalyan Derisi",
+                image: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80",
+                description: "Geleneksel eyer dikişi teknikleri kullanılarak 40 saatten fazla sürede elde dikilmiştir. Ham kenarları, yerel zanaatkarlar tarafından dövülmüş masif pirinç donanımı ve doğal balmumu ile elde parlatılmış detayları içerir. Deri, sizinle birlikte yaşlandıkça güzel ve benzersiz bir patine (renk değişimi) geliştirmesini sağlamak için özenle seçilmiştir."
+            },
+            {
+                id: 2,
+                name: "Örgü Yazlık Portföy",
+                category: "clutch",
+                orderNumber: "AYO-2088",
+                material: "Rattan ve Vegan Deri",
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80",
+                description: "Usta dokumacılar tarafından 3 günlük bir süre içinde karmaşık bir şekilde elde dokunmuştur. Her bir rattan teli esneklik ve dayanıklılık sağlamak için özenle hazırlanmıştır. İç kısmı saf organik pamukla astarlanmış olup, zanaatkarın küçük bir el kabartmalı imza plakasını taşır."
+            },
+            {
+                id: 3,
+                name: "Minimalist Çapraz Askılı Çanta",
+                category: "crossbody",
+                orderNumber: "AYO-3115",
+                material: "Mat Siyah Deri",
+                image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80",
+                description: "Minimalist işçiliğin bir kanıtı. Dikişleri en aza indirmek için tek parça, kusursuz premium mat deriden üretilmiştir. Askısı elde kesilmiş ve tamamen pürüzsüz bir yüzey için defalarca kenar boyası uygulanmıştır. Özel kalıplanmış, gizli manyetik toka ile sabitlenmiştir."
+            },
+            {
+                id: 4,
+                name: "Bohem Süet Hobo Çanta",
+                category: "tote",
+                orderNumber: "AYO-1055",
+                material: "Gerçek Süet",
+                image: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&w=800&q=80",
+                description: "Sürdürülebilir tabakhanelerden tedarik edilen lüks ve yumuşak gerçek süet. Gevşek silüet, çantanın bütünlüğünü koruyan ancak onu sertleştirmeyen dikkatli kalıp çıkarma ve dahili el dikişi takviyeleri ile elde edilmiştir. El örgüsü deri püsküllere sahiptir."
+            },
+            {
+                id: 5,
+                name: "Gece Zarf Çantası",
+                category: "clutch",
+                orderNumber: "AYO-2091",
+                material: "İpek Kadife ve Pirinç",
+                image: "https://images.unsplash.com/photo-1575037614876-c38a4d44f5b8?auto=format&fit=crop&w=800&q=80",
+                description: "Geleneksel tekstilleri metal işçiliği ile birleştiren zarif bir gece parçası. Dış yüzeyi pelüş, elde boyanmış ipek kadifeye sarılmıştır. Çarpıcı geometrik kapak masif pirinçten dökülmüş ve ayna parlaklığına kadar elde parlatılmıştır. Gerçek bir koleksiyon parçası."
+            },
+            {
+                id: 6,
+                name: "Günlük Eyer Çantası",
+                category: "crossbody",
+                orderNumber: "AYO-3120",
+                material: "Bitkisel Tabaklanmış Deri",
+                image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=800&q=80",
+                description: "Bir ömür boyu dayanacak şekilde üretildi. Meşe kabuğu ve doğal yağlar içeren eski bitkisel tabaklama işlemleri kullanılarak elde edilen bu kalın, dayanıklı deri, yıllar geçtikçe mükemmel bir şekilde yumuşayacaktır. Ağır hizmet tipi mumlu iplik dikişleri ve özel yapım bakır perçinlere sahiptir."
+            }
+        ];
+
+        // Render Products
+        const renderProducts = (category = 'all') => {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = ''; // Clear current products
+
+            const filteredProducts = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+
+            filteredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'group flex flex-col cursor-pointer';
+                card.onclick = () => openModal(product.id);
+                
+                card.innerHTML = `
+                    <!-- Image Container -->
+                    <div class="relative bg-gray-100 aspect-[4/5] overflow-hidden mb-6">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out">
+                        
+                        <!-- Hover Action -->
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="bg-white/90 text-brand-dark px-8 py-3 uppercase tracking-widest text-xs backdrop-blur-sm shadow-xl transform scale-95 group-hover:scale-100 transition-all duration-300">
+                                İşçiliği İncele
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="flex flex-col text-center">
+                        <span class="text-brand-muted text-xs uppercase tracking-widest mb-2">${product.material}</span>
+                        <h3 class="font-serif text-xl text-brand-dark mb-2 group-hover:text-brand-accent transition-colors">${product.name}</h3>
+                        <span class="text-brand-dark font-medium tracking-widest text-sm border-t border-brand-accent/20 pt-2 mx-auto inline-block">Ref: ${product.orderNumber}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        // Modal Logic
+        const modal = document.getElementById('product-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        const openModal = (id) => {
+            const product = products.find(p => p.id === id);
+            if(!product) return;
+
+            document.getElementById('modal-image').src = product.image;
+            document.getElementById('modal-title').textContent = product.name;
+            document.getElementById('modal-material').textContent = product.material;
+            document.getElementById('modal-order').textContent = `Sipariş Ref: ${product.orderNumber}`;
+            document.getElementById('modal-description').textContent = product.description;
+
+            modal.classList.remove('hidden');
+            // Trigger reflow to ensure animation plays
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        };
+
+        const closeModal = () => {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore scrolling
+            }, 300);
+        };
+
+        // Close modal on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        const inquireOrder = () => {
+            const orderRef = document.getElementById('modal-order').textContent.replace('Sipariş Ref: ', '');
+            showToast(`${orderRef} referanslı ürün için talep oluşturuldu. Mesajlarınızı kontrol edin.`);
+            closeModal();
+        };
+
+        // Filter Logic
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                // Update active state styling
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active', 'border-brand-dark', 'text-brand-dark');
+                    btn.classList.add('border-transparent', 'text-brand-muted');
+                });
+                
+                const target = e.currentTarget;
+                target.classList.add('active', 'border-brand-dark', 'text-brand-dark');
+                target.classList.remove('border-transparent', 'text-brand-muted');
+
+                // Filter items
+                const filterValue = target.getAttribute('data-filter');
+                renderProducts(filterValue);
+            });
+        });
+
+        // Mobile Menu Toggle
+        const toggleMobileMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        };
+
+        // Toast Notification System
+        const showToast = (message) => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            toast.className = 'bg-brand-dark text-white px-6 py-3 rounded shadow-lg flex items-center justify-between min-w-[250px] toast-enter';
+            toast.innerHTML = `
+                <span class="text-sm tracking-wide">${message}</span>
+                <button onclick="this.parentElement.remove()" class="text-white/70 hover:text-white ml-4">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                if(container.contains(toast)) {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(100%)';
+                    toast.style.transition = 'all 0.3s ease-in';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 4000);
+        };
+
+        // Newsletter Subscription
+        const handleSubscribe = (event) => {
+            event.preventDefault();
+            const input = event.target.querySelector('input');
+            if(input.value) {
+                showToast("Abone olduğunuz için teşekkürler!");
+                input.value = ''; // clear input
+            }
+        };
+
+        // Header Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+
+        // Initialize grid on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
+
+    </script>
+</body>
+</html>
