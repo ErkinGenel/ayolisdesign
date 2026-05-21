@@ -3,567 +3,490 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayolis Design | El Yapımı Kadın Çantaları</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Aura | El Yapımı Kadın Çantaları</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Social Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for elegant SVGs -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Custom Configuration & Styles -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brand-light': '#FDFBF7',
-                        'brand-dark': '#2C2A29',
-                        'brand-accent': '#C1A68D',
-                        'brand-muted': '#8E8B87'
-                    },
-                    fontFamily: {
-                        sans: ['Jost', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #FDFBF7; }
-        ::-webkit-scrollbar-thumb { background: #C1A68D; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a88e75; }
-
-        /* Hide scrollbar for category filter but allow scroll */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Toast animation */
-        @keyframes slideInUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* Custom Styles extending Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf9f8; /* Soft, warm off-white */
+            color: #2d2a26; /* Very dark grey, softer than pure black */
         }
-        .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
+
+        /* Subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        /* Image hover effect */
+        .product-card-image {
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-card-image {
+            transform: scale(1.05);
+        }
+
+        /* Modal transition */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            transition-delay: 0.1s;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Hide scrollbar when modal is open */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 8px; /* Prevent layout shift from scrollbar disappearing */
+        }
     </style>
 </head>
-<body class="bg-brand-light text-brand-dark font-sans antialiased flex flex-col min-h-screen">
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+<body class="antialiased min-h-screen flex flex-col">
 
     <!-- Navigation -->
-    <header class="fixed w-full top-0 z-40 bg-brand-light/90 backdrop-blur-md border-b border-brand-accent/20 transition-all duration-300" id="header">
+    <nav class="sticky top-0 z-40 bg-[#faf9f8]/90 backdrop-blur-md border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden">
-                    <button type="button" onclick="toggleMobileMenu()" class="text-brand-dark hover:text-brand-accent focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    </button>
-                </div>
-
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center justify-center md:justify-start w-full md:w-auto">
-                    <a href="#" class="flex items-center gap-3 group">
-                        <svg class="w-10 h-10 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M30 12L16 48H22L30 25L38 48H44L30 12Z" fill="currentColor" class="text-brand-dark"/>
-                            <path d="M25 38H35" stroke="currentColor" stroke-width="2" class="text-brand-accent"/>
-                            <circle cx="30" cy="30" r="28" stroke="currentColor" stroke-width="1.5" class="text-brand-accent"/>
-                        </svg>
-                        <div class="flex flex-col justify-center">
-                            <span class="font-serif text-2xl tracking-[0.25em] text-brand-dark uppercase leading-none mb-1 mt-1">Ayolis</span>
-                            <span class="font-sans text-[0.65rem] tracking-[0.4em] text-brand-muted uppercase leading-none">Design</span>
-                        </div>
-                    </a>
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <span class="text-2xl font-semibold tracking-widest uppercase text-gray-900">Aura</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="text-sm font-medium text-gray-900 hover:text-gray-500 transition-colors border-b-2 border-gray-900 pb-1">Tüm Koleksiyonlar</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Tote Çantalar</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Çapraz Askılı</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Portföy</a>
                 </div>
 
-                <!-- Desktop Menu -->
-                <nav class="hidden md:flex space-x-10 items-center">
-                    <a href="#home" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Ana Sayfa</a>
-                    <a href="#catalogue" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Katalog</a>
-                    <a href="#craft" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Zanaatımız</a>
-                    <a href="#social" class="text-sm uppercase tracking-wider text-brand-dark hover:text-brand-accent transition-colors">Sosyal Medya</a>
-                </nav>
-
-                <!-- Icons (Search, Cart) -->
-                <div class="flex items-center space-x-4">
-                    <button class="text-brand-dark hover:text-brand-accent transition-colors" onclick="showToast('Arama özelliği yakında eklenecek!')">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </button>
-                    <button class="text-brand-dark hover:text-brand-accent transition-colors relative" onclick="showToast('Alışveriş çantası açıldı')">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                        <span class="absolute -top-1 -right-1 bg-brand-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">0</span>
+                <!-- Contact/Action -->
+                <div class="flex items-center">
+                    <a href="#catalog" class="hidden md:inline-flex items-center justify-center px-5 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-gray-900 hover:bg-gray-800 transition-colors">
+                        Kataloğu İncele
+                    </a>
+                    <!-- Mobile menu button -->
+                    <button class="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden bg-brand-light border-b border-brand-accent/20 absolute w-full">
-            <div class="px-4 pt-2 pb-6 space-y-1">
-                <a href="#home" class="block px-3 py-3 text-base uppercase tracking-widest border-b border-gray-100" onclick="toggleMobileMenu()">Ana Sayfa</a>
-                <a href="#catalogue" class="block px-3 py-3 text-base uppercase tracking-widest border-b border-gray-100" onclick="toggleMobileMenu()">Katalog</a>
-                <a href="#craft" class="block px-3 py-3 text-base uppercase tracking-widest border-b border-gray-100" onclick="toggleMobileMenu()">Zanaatımız</a>
-                <a href="#social" class="block px-3 py-3 text-base uppercase tracking-widest" onclick="toggleMobileMenu()">Sosyal Medya</a>
+    <!-- Hero Section -->
+    <header class="relative bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32 pt-20 px-4 sm:px-6 lg:px-8">
+                <main class="mt-10 mx-auto max-w-7xl sm:mt-12 md:mt-16 lg:mt-20 xl:mt-28">
+                    <div class="sm:text-center lg:text-left">
+                        <h1 class="text-4xl tracking-tight font-light text-gray-900 sm:text-5xl md:text-6xl">
+                            <span class="block xl:inline">Zarafet ve</span>
+                            <span class="block text-gray-500 font-serif italic mt-1">ustalıkla işlendi</span>
+                        </h1>
+                        <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                            El yapımı kadın çantalarından oluşan özel koleksiyonumuzu keşfedin. Her dikiş, kalite, zamansız tasarım ve emeğin hikayesini anlatır.
+                        </p>
+                        <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                            <div class="rounded-full shadow">
+                                <a href="#catalog" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gray-900 hover:bg-gray-800 md:py-4 md:text-lg transition-all duration-300">
+                                    Kataloğu Keşfet
+                                    <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </main>
             </div>
+        </div>
+        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 bg-gray-100">
+            <!-- Decorative image for hero -->
+            <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Şık deri çantalar">
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="relative h-screen flex items-center justify-center mt-10 md:mt-0">
-        <!-- Background Image (Using a high-quality fashion bag placeholder) -->
-        <div class="absolute inset-0 w-full h-full">
-            <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1920&q=80" alt="Zarif El Yapımı Deri Çanta" class="w-full h-full object-cover object-center" />
-            <!-- Overlay for text readability -->
-            <div class="absolute inset-0 bg-black/30"></div>
+    <!-- Catalog Section -->
+    <section id="catalog" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-light tracking-tight text-gray-900 sm:text-4xl">Koleksiyon</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Detayları görmek ve WhatsApp üzerinden doğrudan sipariş vermek için bir çanta seçin.</p>
         </div>
-        
-        <!-- Hero Content -->
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <span class="block text-white/90 text-sm md:text-base uppercase tracking-[0.3em] mb-4">Yeni Koleksiyon</span>
-            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 drop-shadow-lg">Zanaatkar Zarafeti</h1>
-            <p class="text-white/90 text-lg md:text-xl font-light mb-10 max-w-2xl mx-auto drop-shadow">Özenle el yapımı kadın çantaları. Orijinal materyaller, zamansız tasarım, modern ilham perileri için tasarlandı.</p>
-            <a href="#catalogue" class="inline-block bg-white text-brand-dark px-10 py-4 uppercase tracking-widest text-sm hover:bg-brand-accent hover:text-white transition-all duration-300">
-                Kataloğu Keşfet
-            </a>
-        </div>
-    </section>
-
-    <!-- Catalogue Section -->
-    <section id="catalogue" class="py-24 bg-brand-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-4">Katalog</h2>
-                <p class="text-brand-muted max-w-2xl mx-auto">El yapımı özel parçalarımızı keşfedin. Mükemmel yol arkadaşınızı bulmak için stile göre filtreleyin.</p>
-            </div>
-
-            <!-- Filters -->
-            <div class="flex justify-center mb-12">
-                <div class="flex space-x-6 overflow-x-auto no-scrollbar pb-2" id="filter-container">
-                    <button class="filter-btn active text-sm uppercase tracking-wider pb-1 border-b-2 border-brand-dark text-brand-dark transition-colors whitespace-nowrap" data-filter="all">Tüm Stiller</button>
-                    <button class="filter-btn text-sm uppercase tracking-wider pb-1 border-b-2 border-transparent text-brand-muted hover:text-brand-dark transition-colors whitespace-nowrap" data-filter="tote">Tote Çantalar</button>
-                    <button class="filter-btn text-sm uppercase tracking-wider pb-1 border-b-2 border-transparent text-brand-muted hover:text-brand-dark transition-colors whitespace-nowrap" data-filter="crossbody">Çapraz Askılı</button>
-                    <button class="filter-btn text-sm uppercase tracking-wider pb-1 border-b-2 border-transparent text-brand-muted hover:text-brand-dark transition-colors whitespace-nowrap" data-filter="clutch">Portföy Çantalar</button>
-                </div>
-            </div>
-
-            <!-- Product Grid -->
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-                <!-- Products will be injected here via JavaScript -->
-            </div>
-            
-            <div class="text-center mt-16">
-                <button class="border border-brand-dark text-brand-dark px-10 py-4 uppercase tracking-widest text-sm hover:bg-brand-dark hover:text-white transition-all duration-300" onclick="showToast('Daha fazla ürün yükleniyor...')">Daha Fazla Yükle</button>
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
-    </section>
-
-    <!-- Product Details Modal -->
-    <div id="product-modal" class="fixed inset-0 z-50 hidden bg-brand-dark/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
-        <div class="bg-brand-light max-w-5xl w-full flex flex-col md:flex-row shadow-2xl relative transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="modal-content">
-            <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/50 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white z-10 transition-colors">
-                <i class="fas fa-times text-lg"></i>
-            </button>
-            
-            <div class="md:w-1/2 bg-gray-100 min-h-[400px] relative">
-                <img id="modal-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
-            </div>
-            
-            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-brand-light">
-                <span id="modal-material" class="text-brand-accent text-xs uppercase tracking-widest mb-2 block"></span>
-                <h2 id="modal-title" class="font-serif text-3xl md:text-4xl text-brand-dark mb-3"></h2>
-                <div class="border-b border-brand-accent/20 pb-4 mb-6">
-                    <span id="modal-order" class="text-brand-dark font-medium tracking-widest text-sm bg-brand-accent/10 px-3 py-1 inline-block"></span>
-                </div>
-                
-                <div class="space-y-4 mb-10">
-                    <p class="text-brand-dark font-medium text-sm uppercase tracking-widest">Zanaatkar Detayları</p>
-                    <p id="modal-description" class="text-gray-600 font-light text-sm leading-relaxed"></p>
-                </div>
-                
-                <button onclick="inquireOrder()" class="mt-auto bg-brand-dark text-white px-8 py-4 uppercase tracking-widest text-sm hover:bg-brand-accent transition-colors w-full flex items-center justify-center gap-3 border border-brand-dark hover:border-brand-accent">
-                    <i class="far fa-envelope"></i> Bu Parça Hakkında Bilgi Al
-                </button>
-            </div>
+        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 bg-gray-100">
+            <!-- Decorative image for hero -->
+            <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Elegant leather bags">
         </div>
-    </div>
+    </header>
 
-    <!-- Our Craft Section (About) -->
-    <section id="craft" class="py-24 bg-brand-dark text-brand-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="order-2 lg:order-1 relative h-[500px] w-full overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&w=800&q=80" alt="Deri İşçiliği Süreci" class="w-full h-full object-cover object-center" />
-                </div>
-                <div class="order-1 lg:order-2">
-                    <span class="text-brand-accent text-sm uppercase tracking-widest mb-2 block">Mirasımız</span>
-                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Tutkuyla El Yapımı</h2>
-                    <p class="text-gray-300 font-light mb-6 leading-relaxed">
-                        Her Ayolis Design çantası bir adanmışlık hikayesi anlatır. En iyi, etik olarak tedarik edilmiş sırçalı derileri ve sürdürülebilir malzemeleri seçmekten son dikişe kadar, zanaatkarlarımız her bir parçaya saatler süren titiz bir çalışma katar.
-                    </p>
-                    <p class="text-gray-300 font-light mb-10 leading-relaxed">
-                        Yavaş modaya inanıyoruz. Sadece zamana meydan okuyan değil, aynı zamanda yaşlandıkça daha da güzelleşen zamansız silüetler yaratıyoruz. Ayolis taşıdığınızda, bir sanat eseri taşırsınız.
-                    </p>
-                    <a href="#" class="inline-block border-b border-brand-accent text-brand-accent pb-1 uppercase tracking-wider text-sm hover:text-white hover:border-white transition-colors">Hikayemizi Oku</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Social / Instagram Feed Section -->
-    <section id="social" class="py-24 bg-brand-light overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
-            <h2 class="font-serif text-3xl md:text-4xl text-brand-dark mb-4">Ayolis Kolektifine Katılın</h2>
-            <p class="text-brand-muted mb-6">Öne çıkmak için bizi Instagram'da etiketleyin: <a href="#" class="text-brand-accent hover:text-brand-dark transition-colors">@AyolisDesign</a></p>
-            <div class="flex justify-center space-x-6">
-                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
-                    <i class="fab fa-pinterest-p"></i>
-                </a>
-                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" class="w-10 h-10 rounded-full border border-brand-dark flex items-center justify-center text-brand-dark hover:bg-brand-dark hover:text-white transition-all">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-            </div>
+    <!-- Catalog Section -->
+    <section id="catalog" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-light tracking-tight text-gray-900 sm:text-4xl">The Collection</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Select a piece to view details and order directly via WhatsApp.</p>
         </div>
 
-        <!-- Simulated Feed Grid -->
-        <div class="flex overflow-x-auto pb-8 snap-x snap-mandatory hide-scroll gap-4 px-4 md:grid md:grid-cols-4 md:gap-4 md:px-0 md:max-w-full md:overflow-visible">
-            <!-- Feed Item 1 -->
-            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <i class="fab fa-instagram text-white text-3xl"></i>
-                </div>
-            </div>
-            <!-- Feed Item 2 -->
-            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <i class="fab fa-instagram text-white text-3xl"></i>
-                </div>
-            </div>
-            <!-- Feed Item 3 -->
-            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <i class="fab fa-instagram text-white text-3xl"></i>
-                </div>
-            </div>
-            <!-- Feed Item 4 -->
-            <div class="relative group min-w-[280px] md:min-w-0 snap-center aspect-square overflow-hidden bg-gray-100 cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=600&q=80" alt="Instagram Post" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <i class="fab fa-instagram text-white text-3xl"></i>
-                </div>
-            </div>
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
+            <!-- Products will be injected here by JavaScript -->
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-brand-dark pt-20 pb-10 border-t border-gray-800 flex-grow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                <!-- Brand Info -->
-                <div>
-                    <a href="#" class="flex items-center gap-3 group mb-6">
-                        <svg class="w-10 h-10 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M30 12L16 48H22L30 25L38 48H44L30 12Z" fill="currentColor" class="text-brand-light"/>
-                            <path d="M25 38H35" stroke="currentColor" stroke-width="2" class="text-brand-accent"/>
-                            <circle cx="30" cy="30" r="28" stroke="currentColor" stroke-width="1.5" class="text-brand-accent"/>
-                        </svg>
-                        <div class="flex flex-col justify-center">
-                            <span class="font-serif text-2xl tracking-[0.25em] text-brand-light uppercase leading-none mb-1 mt-1">Ayolis</span>
-                            <span class="font-sans text-[0.65rem] tracking-[0.4em] text-brand-muted uppercase leading-none">Design</span>
-                        </div>
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center flex-col md:flex-row">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-semibold tracking-widest uppercase text-gray-900">Aura</span>
+                    <p class="text-sm text-gray-500 mt-1">El yapımı zarafet.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">Instagram</span>
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
                     </a>
-                    <p class="text-gray-400 font-light text-sm leading-relaxed mb-6">
-                        Modern kadın için zamansız zarafet üretiyoruz. Her dikiş, her detay sevgiyle elde yapıldı.
-                    </p>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h4 class="text-brand-light font-serif text-lg mb-6">Keşfet</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Hikayemiz</a></li>
-                        <li><a href="#catalogue" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Katalog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Özel Siparişler</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Günlük</a></li>
-                    </ul>
-                </div>
-
-                <!-- Customer Care -->
-                <div>
-                    <h4 class="text-brand-light font-serif text-lg mb-6">Müşteri Hizmetleri</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Bize Ulaşın</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Teslimat ve İadeler</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">Deri Bakımı</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-brand-accent text-sm transition-colors">SSS</a></li>
-                    </ul>
-                </div>
-
-                <!-- Newsletter -->
-                <div>
-                    <h4 class="text-brand-light font-serif text-lg mb-6">Bağlantıda Kalın</h4>
-                    <p class="text-gray-400 text-sm mb-4">Özel lansmanlar ve zanaatkar hikayeleri için bültenimize abone olun.</p>
-                    <form onsubmit="handleSubscribe(event)" class="flex border-b border-gray-600 pb-2">
-                        <input type="email" placeholder="E-posta Adresi" required class="bg-transparent border-none outline-none text-brand-light text-sm w-full placeholder-gray-500">
-                        <button type="submit" class="text-brand-accent hover:text-white uppercase text-xs tracking-widest transition-colors ml-2">Abone Ol</button>
-                    </form>
+                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">WhatsApp</span>
+                        <i data-lucide="message-circle" class="w-6 h-6"></i>
+                    </a>
                 </div>
             </div>
-
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-500 text-xs mb-4 md:mb-0">&copy; 2026 Ayolis Design. Tüm hakları saklıdır.</p>
-                <div class="flex space-x-4 text-gray-500 text-xs">
-                    <a href="#" class="hover:text-brand-light transition-colors">Gizlilik Politikası</a>
-                    <a href="#" class="hover:text-brand-light transition-colors">Hizmet Şartları</a>
-                </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 flex justify-center">
+                <p class="text-base text-gray-400 xl:text-center">&copy; 2026 Aura Çanta. Tüm hakları saklıdır.</p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript for Interactivity -->
+    <!-- Product Modal Overlay -->
+    <div id="product-modal" class="fixed inset-0 z-50 modal-overlay flex items-center justify-center bg-gray-900/80 backdrop-blur-sm p-4 sm:p-6">
+        
+        <!-- Modal Content Container -->
+        <div class="modal-content relative bg-white w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+            
+            <!-- Close Button -->
+            <button id="close-modal" class="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur hover:bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 transition-colors focus:outline-none">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Image Gallery Section (Left/Top) -->
+            <div class="w-full md:w-3/5 bg-gray-50 flex flex-col border-b md:border-b-0 md:border-r border-gray-200">
+                <!-- Main Large Image -->
+                <div class="flex-grow relative overflow-hidden aspect-square md:aspect-auto min-h-[300px]">
+                    <img id="modal-main-image" src="" alt="Main product view" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300">
+                </div>
+                
+                <!-- Thumbnails Strip -->
+                <div class="h-24 sm:h-32 bg-white p-4 flex gap-3 overflow-x-auto no-scrollbar border-t border-gray-100">
+                    <div id="modal-thumbnails" class="flex gap-3 min-w-max">
+                        <!-- Thumbnails injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details Section (Right/Bottom) -->
+            <div class="w-full md:w-2/5 p-6 sm:p-8 md:p-10 flex flex-col overflow-y-auto">
+                <div class="mb-2 text-sm font-medium text-gray-500 uppercase tracking-wider" id="modal-catalog-number">Kat: #000</div>
+                <h3 id="modal-title" class="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">Ürün Adı</h3>
+                <p id="modal-price" class="text-xl text-gray-700 mb-6 font-medium">0.00 ₺</p>
+                
+                <div class="prose prose-sm text-gray-500 mb-8 flex-grow">
+                    <p id="modal-description">Detaylı açıklama buraya gelecek.</p>
+                    
+                    <h4 class="text-sm font-medium text-gray-900 mt-6 mb-2">Materyaller</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                        <li>Birinci Sınıf Hakiki Deri</li>
+                        <li>Pirinç Aksesuarlar</li>
+                        <li>Pamuklu Kanvas Astar</li>
+                    </ul>
+                    
+                    <h4 class="text-sm font-medium text-gray-900 mt-6 mb-2">Boyutlar</h4>
+                    <p class="text-sm" id="modal-dimensions">G: 30cm x Y: 25cm x D: 10cm</p>
+                </div>
+
+                <!-- WhatsApp Order Button -->
+                <div class="mt-auto pt-6 border-t border-gray-100">
+                    <a id="modal-whatsapp-btn" href="#" target="_blank" class="w-full flex items-center justify-center px-6 py-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        <i data-lucide="message-circle" class="w-5 h-5 mr-2"></i>
+                        WhatsApp ile Sipariş Ver
+                    </a>
+                    <p class="text-xs text-center text-gray-400 mt-3">Tıkladığınızda, önceden doldurulmuş bir sipariş mesajı ile WhatsApp açılacaktır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script>
-        // Product Data
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // --- Configuration ---
+        // REPLACE WITH YOUR ACTUAL WHATSAPP NUMBER (include country code, no + or spaces)
+        const WHATSAPP_NUMBER = "1234567890"; 
+
+        // --- Mock Data: The Bag Catalog ---
+        // In a real scenario, this might come from an API or CMS
         const products = [
             {
-                id: 1,
-                name: "Klasik Deri Tote Çanta",
-                category: "tote",
-                orderNumber: "AYO-1042",
-                material: "Sırçalı İtalyan Derisi",
-                image: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80",
-                description: "Geleneksel eyer dikişi teknikleri kullanılarak 40 saatten fazla sürede elde dikilmiştir. Ham kenarları, yerel zanaatkarlar tarafından dövülmüş masif pirinç donanımı ve doğal balmumu ile elde parlatılmış detayları içerir. Deri, sizinle birlikte yaşlandıkça güzel ve benzersiz bir patine (renk değişimi) geliştirmesini sağlamak için özenle seçilmiştir."
+                id: 'A101',
+                name: 'El Örgüsü Hasır Tote',
+                price: '3,200 ₺',
+                description: 'Doğal malzemelerle özenle elde örülmüş, ahşap saplı ve deri detaylı tasarım çanta. Geniş iç hacmi, fermuarlı iç cebi ve kaliteli kanvas astarı ile yaz aylarında hem günlük kullanım hem de tatil kombinleriniz için mükemmel bir tamamlayıcıdır.',
+                dimensions: 'G: 38cm x Y: 28cm x D: 15cm',
+                images: [
+                    '1777274985494.jpg', // Lifestyle / Ana Görsel
+                    '1777274985703.jpg', // Ön Cephe
+                    '1777274985652.jpg', // Açılı Görünüm
+                    '1777274985404.jpg', // Şezlong / Konsept
+                    '1777274985677.jpg', // Yan Görünüm
+                    '1777274985554.jpg', // İç Hacim Açık
+                    '1777274985578.jpg'  // İç Detay / Marka
+                ]
             },
             {
-                id: 2,
-                name: "Örgü Yazlık Portföy",
-                category: "clutch",
-                orderNumber: "AYO-2088",
-                material: "Rattan ve Vegan Deri",
-                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80",
-                description: "Usta dokumacılar tarafından 3 günlük bir süre içinde karmaşık bir şekilde elde dokunmuştur. Her bir rattan teli esneklik ve dayanıklılık sağlamak için özenle hazırlanmıştır. İç kısmı saf organik pamukla astarlanmış olup, zanaatkarın küçük bir el kabartmalı imza plakasını taşır."
+                id: 'C205',
+                name: 'Luna Çapraz Çanta',
+                price: '1,850 ₺',
+                description: 'Binicilik tasarımından ilham alan Luna, kavisli bir silüete ve ayarlanabilir bir askıya sahiptir. Kompakt ama temel eşyalarınız için yeterince geniş. Güvenli bir manyetik kapağa sahiptir.',
+                dimensions: 'G: 21cm x Y: 18cm x D: 7.5cm',
+                images: [
+                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80'
+                ]
             },
             {
-                id: 3,
-                name: "Minimalist Çapraz Askılı Çanta",
-                category: "crossbody",
-                orderNumber: "AYO-3115",
-                material: "Mat Siyah Deri",
-                image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80",
-                description: "Minimalist işçiliğin bir kanıtı. Dikişleri en aza indirmek için tek parça, kusursuz premium mat deriden üretilmiştir. Askısı elde kesilmiş ve tamamen pürüzsüz bir yüzey için defalarca kenar boyası uygulanmıştır. Özel kalıplanmış, gizli manyetik toka ile sabitlenmiştir."
+                id: 'B312',
+                name: 'Kutu Yapılı Çanta',
+                price: '2,100 ₺',
+                description: 'Bu mimari parçayla fark yaratın. Sert yapı, temiz geometrik hatlar ve farklı bir kilit mekanizması. Akşam veya şık günlük giyim için modern bir klasik.',
+                dimensions: 'G: 18cm x Y: 14cm x D: 9cm',
+                images: [
+                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80'
+                ]
+            },
+             {
+                id: 'T409',
+                name: 'Günlük Hobo Çanta',
+                price: '2,600 ₺',
+                description: 'Zahmetsizce şık. Bu formsuz hobo çanta taşındığında güzelce dökümlü durur. Geniş, rahat bir omuz askısına ve oldukça ferah astarsız bir iç kısma sahiptir.',
+                dimensions: 'G: 40cm x Y: 33cm x D: 15cm',
+                images: [
+                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80'
+                ]
             },
             {
-                id: 4,
-                name: "Bohem Süet Hobo Çanta",
-                category: "tote",
-                orderNumber: "AYO-1055",
-                material: "Gerçek Süet",
-                image: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&w=800&q=80",
-                description: "Sürdürülebilir tabakhanelerden tedarik edilen lüks ve yumuşak gerçek süet. Gevşek silüet, çantanın bütünlüğünü koruyan ancak onu sertleştirmeyen dikkatli kalıp çıkarma ve dahili el dikişi takviyeleri ile elde edilmiştir. El örgüsü deri püsküllere sahiptir."
+                id: 'C550',
+                name: 'Zarf Portföy Çanta',
+                price: '1,450 ₺',
+                description: 'Şık, ince ve sofistike. Sadece temel ihtiyaçlar için tasarlandı. Gizli bir manyetik çıtçıtı ve eller serbest kullanım için isteğe bağlı narin bir zincir askısı bulunur.',
+                dimensions: 'G: 28cm x Y: 15cm x D: 4cm',
+                images: [
+                    'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80'
+                ]
             },
             {
-                id: 5,
-                name: "Gece Zarf Çantası",
-                category: "clutch",
-                orderNumber: "AYO-2091",
-                material: "İpek Kadife ve Pirinç",
-                image: "https://images.unsplash.com/photo-1575037614876-c38a4d44f5b8?auto=format&fit=crop&w=800&q=80",
-                description: "Geleneksel tekstilleri metal işçiliği ile birleştiren zarif bir gece parçası. Dış yüzeyi pelüş, elde boyanmış ipek kadifeye sarılmıştır. Çarpıcı geometrik kapak masif pirinçten dökülmüş ve ayna parlaklığına kadar elde parlatılmıştır. Gerçek bir koleksiyon parçası."
-            },
-            {
-                id: 6,
-                name: "Günlük Eyer Çantası",
-                category: "crossbody",
-                orderNumber: "AYO-3120",
-                material: "Bitkisel Tabaklanmış Deri",
-                image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=800&q=80",
-                description: "Bir ömür boyu dayanacak şekilde üretildi. Meşe kabuğu ve doğal yağlar içeren eski bitkisel tabaklama işlemleri kullanılarak elde edilen bu kalın, dayanıklı deri, yıllar geçtikçe mükemmel bir şekilde yumuşayacaktır. Ağır hizmet tipi mumlu iplik dikişleri ve özel yapım bakır perçinlere sahiptir."
+                id: 'M621',
+                name: 'Mini Kova Çanta',
+                price: '1,950 ₺',
+                description: 'Klasik bir silüete eğlenceli bir yaklaşım. Mini kova çanta, büzme ipli bir kapağa ve sağlam bir tabana sahiptir. Hem kısa bir sap hem de çapraz bir askı ile birlikte gelir.',
+                dimensions: 'G: 16.5cm x Y: 19cm x D: 12.5cm',
+                images: [
+                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80'
+                ]
             }
         ];
 
-        // Render Products
-        const renderProducts = (category = 'all') => {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = ''; // Clear current products
+        // --- DOM Elements ---
+        const productGrid = document.getElementById('product-grid');
+        const modal = document.getElementById('product-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const modalMainImage = document.getElementById('modal-main-image');
+        const modalThumbnails = document.getElementById('modal-thumbnails');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCatalogNumber = document.getElementById('modal-catalog-number');
+        const modalPrice = document.getElementById('modal-price');
+        const modalDescription = document.getElementById('modal-description');
+        const modalDimensions = document.getElementById('modal-dimensions');
+        const modalWhatsappBtn = document.getElementById('modal-whatsapp-btn');
 
-            const filteredProducts = category === 'all' 
-                ? products 
-                : products.filter(p => p.category === category);
+        // --- Functions ---
 
-            filteredProducts.forEach(product => {
+        // Function to create WhatsApp link
+        function getWhatsAppLink(productName, catalogId) {
+            const message = `Merhaba! Kataloğunuzdan bir çanta siparişi vermek istiyorum.\n\n*Ürün:* ${productName}\n*Katalog Numarası:* ${catalogId}\n\nStok durumu ve kargo hakkında bilgi alabilir miyim?`;
+            const encodedMessage = encodeURIComponent(message);
+            return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+        }
+
+        // Render products into the grid
+        function renderProducts() {
+            productGrid.innerHTML = ''; // Clear existing
+            
+            products.forEach((product, index) => {
+                // Create a card for each product
                 const card = document.createElement('div');
-                card.className = 'group flex flex-col cursor-pointer';
-                card.onclick = () => openModal(product.id);
+                card.className = 'group relative product-card flex flex-col cursor-pointer bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100';
                 
+                // Add click listener to open modal with this product's data
+                card.onclick = () => openModal(product);
+
+                // Card HTML structure
                 card.innerHTML = `
-                    <!-- Image Container -->
-                    <div class="relative bg-gray-100 aspect-[4/5] overflow-hidden mb-6">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out">
-                        
-                        <!-- Hover Action -->
-                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="bg-white/90 text-brand-dark px-8 py-3 uppercase tracking-widest text-xs backdrop-blur-sm shadow-xl transform scale-95 group-hover:scale-100 transition-all duration-300">
-                                İşçiliği İncele
+                    <div class="relative w-full aspect-[4/5] bg-gray-100 rounded-xl overflow-hidden mb-4">
+                        <img src="${product.images[0]}" alt="${product.name}" class="product-card-image absolute inset-0 w-full h-full object-cover object-center">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md text-xs font-semibold tracking-wider text-gray-800 shadow-sm border border-gray-100">
+                            #${product.id}
+                        </div>
+                        <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300"></div>
+                    </div>
+                    <div class="flex flex-col flex-grow px-2">
+                        <h3 class="text-lg font-medium text-gray-900 line-clamp-1">${product.name}</h3>
+                        <p class="mt-1 text-sm text-gray-500 line-clamp-2 mb-4">${product.description}</p>
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="text-lg font-semibold text-gray-900">${product.price}</span>
+                            <span class="inline-flex items-center text-sm font-medium text-indigo-600 group-hover:text-indigo-800 transition-colors">
+                                Detayları Gör <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
                             </span>
                         </div>
                     </div>
-                    
-                    <!-- Product Info -->
-                    <div class="flex flex-col text-center">
-                        <span class="text-brand-muted text-xs uppercase tracking-widest mb-2">${product.material}</span>
-                        <h3 class="font-serif text-xl text-brand-dark mb-2 group-hover:text-brand-accent transition-colors">${product.name}</h3>
-                        <span class="text-brand-dark font-medium tracking-widest text-sm border-t border-brand-accent/20 pt-2 mx-auto inline-block">Ref: ${product.orderNumber}</span>
-                    </div>
                 `;
-                grid.appendChild(card);
+                productGrid.appendChild(card);
             });
-        };
+            
+            // Re-initialize icons for newly added HTML
+            lucide.createIcons();
+        }
 
-        // Modal Logic
-        const modal = document.getElementById('product-modal');
-        const modalContent = document.getElementById('modal-content');
+        // Open Modal and populate data
+        function openModal(product) {
+            // Populate Text Data
+            modalTitle.textContent = product.name;
+            modalCatalogNumber.textContent = `Katalog: #${product.id}`;
+            modalPrice.textContent = product.price;
+            modalDescription.textContent = product.description;
+            modalDimensions.textContent = product.dimensions;
+            
+            // Set WhatsApp Link
+            modalWhatsappBtn.href = getWhatsAppLink(product.name, product.id);
 
-        const openModal = (id) => {
-            const product = products.find(p => p.id === id);
-            if(!product) return;
+            // Populate Images
+            modalMainImage.src = product.images[0];
+            modalMainImage.style.opacity = 1; // Ensure it's visible initially
+            
+            modalThumbnails.innerHTML = ''; // Clear old thumbnails
+            
+            product.images.forEach((imgSrc, index) => {
+                const thumbBtn = document.createElement('button');
+                // Styling for thumbnail: unselected state
+                thumbBtn.className = `relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all focus:outline-none ${index === 0 ? 'border-gray-900 ring-2 ring-offset-1 ring-gray-200' : 'border-transparent hover:border-gray-300'}`;
+                
+                thumbBtn.innerHTML = `<img src="${imgSrc}" class="w-full h-full object-cover" alt="Thumbnail ${index + 1}">`;
+                
+                thumbBtn.onclick = (e) => {
+                    // Update main image with a slight fade effect
+                    modalMainImage.style.opacity = 0.5;
+                    setTimeout(() => {
+                        modalMainImage.src = imgSrc;
+                        modalMainImage.style.opacity = 1;
+                    }, 150);
 
-            document.getElementById('modal-image').src = product.image;
-            document.getElementById('modal-title').textContent = product.name;
-            document.getElementById('modal-material').textContent = product.material;
-            document.getElementById('modal-order').textContent = `Sipariş Ref: ${product.orderNumber}`;
-            document.getElementById('modal-description').textContent = product.description;
+                    // Update active state styling on thumbnails
+                    Array.from(modalThumbnails.children).forEach(btn => {
+                        btn.className = 'relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 border-transparent hover:border-gray-300 transition-all focus:outline-none';
+                    });
+                    e.currentTarget.className = 'relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 border-gray-900 ring-2 ring-offset-1 ring-gray-200 transition-all focus:outline-none';
+                };
+                
+                modalThumbnails.appendChild(thumbBtn);
+            });
 
-            modal.classList.remove('hidden');
-            // Trigger reflow to ensure animation plays
-            void modal.offsetWidth;
-            modal.classList.remove('opacity-0');
-            modalContent.classList.remove('scale-95');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        };
+            // Show Modal
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
 
-        const closeModal = () => {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.style.overflow = ''; // Restore scrolling
-            }, 300);
-        };
+        // Close Modal
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        }
 
-        // Close modal on outside click
+        // --- Event Listeners ---
+        
+        // Close modal on close button click
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside the content area (on the overlay)
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 closeModal();
             }
         });
 
-        // Close modal on escape key
+        // Close modal on Escape key press
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
                 closeModal();
             }
         });
 
-        const inquireOrder = () => {
-            const orderRef = document.getElementById('modal-order').textContent.replace('Sipariş Ref: ', '');
-            showToast(`${orderRef} referanslı ürün için talep oluşturuldu. Mesajlarınızı kontrol edin.`);
-            closeModal();
-        };
-
-        // Filter Logic
-        document.querySelectorAll('.filter-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                // Update active state styling
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active', 'border-brand-dark', 'text-brand-dark');
-                    btn.classList.add('border-transparent', 'text-brand-muted');
-                });
-                
-                const target = e.currentTarget;
-                target.classList.add('active', 'border-brand-dark', 'text-brand-dark');
-                target.classList.remove('border-transparent', 'text-brand-muted');
-
-                // Filter items
-                const filterValue = target.getAttribute('data-filter');
-                renderProducts(filterValue);
-            });
+        // Prevent modal content clicks from closing the modal
+        document.querySelector('.modal-content').addEventListener('click', (e) => {
+            e.stopPropagation();
         });
 
-        // Mobile Menu Toggle
-        const toggleMobileMenu = () => {
-            const menu = document.getElementById('mobile-menu');
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
-            }
-        };
-
-        // Toast Notification System
-        const showToast = (message) => {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            toast.className = 'bg-brand-dark text-white px-6 py-3 rounded shadow-lg flex items-center justify-between min-w-[250px] toast-enter';
-            toast.innerHTML = `
-                <span class="text-sm tracking-wide">${message}</span>
-                <button onclick="this.parentElement.remove()" class="text-white/70 hover:text-white ml-4">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            container.appendChild(toast);
-
-            // Auto remove after 4 seconds
-            setTimeout(() => {
-                if(container.contains(toast)) {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translateY(100%)';
-                    toast.style.transition = 'all 0.3s ease-in';
-                    setTimeout(() => toast.remove(), 300);
-                }
-            }, 4000);
-        };
-
-        // Newsletter Subscription
-        const handleSubscribe = (event) => {
-            event.preventDefault();
-            const input = event.target.querySelector('input');
-            if(input.value) {
-                showToast("Abone olduğunuz için teşekkürler!");
-                input.value = ''; // clear input
-            }
-        };
-
-        // Header Scroll Effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('shadow-md');
-            } else {
-                header.classList.remove('shadow-md');
-            }
-        });
-
-        // Initialize grid on load
+        // Initialize Catalog on load
         window.addEventListener('DOMContentLoaded', () => {
             renderProducts();
         });
