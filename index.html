@@ -4,22 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura | El Yapımı Kadın Çantaları</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter for a clean, modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons for elegant SVGs -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* Custom Styles extending Tailwind */
+        /* Özel Tailwind eklentileri */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #faf9f8; /* Soft, warm off-white */
-            color: #2d2a26; /* Very dark grey, softer than pure black */
+            background-color: #faf9f8;
+            color: #2d2a26;
         }
 
-        /* Subtle scrollbar */
+        /* Zarif kaydırma çubuğu */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -34,7 +31,7 @@
             background: #9ca3af;
         }
 
-        /* Image hover effect */
+        /* Kart ve Resim efektleri */
         .product-card-image {
             transition: transform 0.5s ease;
         }
@@ -42,7 +39,7 @@
             transform: scale(1.05);
         }
 
-        /* Modal transition */
+        /* Modal animasyonları */
         .modal-overlay {
             opacity: 0;
             visibility: hidden;
@@ -63,39 +60,42 @@
             opacity: 1;
         }
         
-        /* Hide scrollbar when modal is open */
         body.modal-open {
             overflow: hidden;
-            padding-right: 8px; /* Prevent layout shift from scrollbar disappearing */
+            padding-right: 8px;
+        }
+        
+        /* Thumbnail kaydırma gizleme */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
-    <!-- Navigation -->
     <nav class="sticky top-0 z-40 bg-[#faf9f8]/90 backdrop-blur-md border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center cursor-pointer">
                     <span class="text-2xl font-semibold tracking-widest uppercase text-gray-900">Aura</span>
                 </div>
                 
-                <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-8">
-                    <a href="#" class="text-sm font-medium text-gray-900 hover:text-gray-500 transition-colors border-b-2 border-gray-900 pb-1">Tüm Koleksiyonlar</a>
-                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Tote Çantalar</a>
-                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Çapraz Askılı</a>
-                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Portföy</a>
+                    <a href="#" class="text-sm font-medium text-gray-900 border-b-2 border-gray-900 pb-1">Koleksiyon</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Hasır Modeller</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Örgü Çantalar</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Hakkımızda</a>
                 </div>
 
-                <!-- Contact/Action -->
                 <div class="flex items-center">
                     <a href="#catalog" class="hidden md:inline-flex items-center justify-center px-5 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-gray-900 hover:bg-gray-800 transition-colors">
-                        Kataloğu İncele
+                        Sipariş Ver
                     </a>
-                    <!-- Mobile menu button -->
-                    <button class="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+                    <button class="md:hidden p-2 text-gray-500">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
@@ -103,7 +103,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <header class="relative bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32 pt-20 px-4 sm:px-6 lg:px-8">
@@ -114,169 +113,132 @@
                             <span class="block text-gray-500 font-serif italic mt-1">ustalıkla işlendi</span>
                         </h1>
                         <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                            El yapımı kadın çantalarından oluşan özel koleksiyonumuzu keşfedin. Her dikiş, kalite, zamansız tasarım ve emeğin hikayesini anlatır.
+                            El yapımı kadın çantalarından oluşan özel koleksiyonumuzu keşfedin. Her dikiş, kalite ve zamansız tasarımın hikayesini anlatır.
                         </p>
                         <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                            <div class="rounded-full shadow">
-                                <a href="#catalog" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gray-900 hover:bg-gray-800 md:py-4 md:text-lg transition-all duration-300">
-                                    Kataloğu Keşfet
-                                    <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
-                                </a>
-                            </div>
+                            <a href="#catalog" class="flex items-center justify-center px-8 py-3 text-base font-medium rounded-full text-white bg-gray-900 hover:bg-gray-800 md:py-4 md:text-lg transition-all">
+                                Kataloğu Keşfet
+                                <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                            </a>
                         </div>
                     </div>
                 </main>
             </div>
         </div>
-        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 bg-gray-100">
-            <!-- Decorative image for hero -->
-            <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Şık deri çantalar">
+        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+            <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="El yapımı çantalar">
         </div>
     </header>
 
-    <!-- Catalog Section -->
     <section id="catalog" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
         <div class="text-center mb-16">
-            <h2 class="text-3xl font-light tracking-tight text-gray-900 sm:text-4xl">Koleksiyon</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Detayları görmek ve WhatsApp üzerinden doğrudan sipariş vermek için bir çanta seçin.</p>
+            <h2 class="text-3xl font-light tracking-tight text-gray-900 sm:text-4xl">Koleksiyonumuz</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Sipariş vermek veya detayları incelemek için bir model seçin.</p>
         </div>
 
-        <!-- Product Grid -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
-            <!-- Products will be injected here by JavaScript -->
-        </div>
+            </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center flex-col md:flex-row">
+            <div class="flex justify-between items-center flex-col md:flex-row text-center md:text-left">
                 <div class="mb-4 md:mb-0">
                     <span class="text-xl font-semibold tracking-widest uppercase text-gray-900">Aura</span>
-                    <p class="text-sm text-gray-500 mt-1">El yapımı zarafet.</p>
+                    <p class="text-sm text-gray-500 mt-1">Geleneksel dokunuş, modern şıklık.</p>
                 </div>
                 <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <span class="sr-only">Instagram</span>
-                        <i data-lucide="instagram" class="w-6 h-6"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <span class="sr-only">WhatsApp</span>
-                        <i data-lucide="message-circle" class="w-6 h-6"></i>
-                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-600"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-gray-600"><i data-lucide="message-circle"></i></a>
                 </div>
             </div>
-            <div class="mt-8 border-t border-gray-200 pt-8 flex justify-center">
-                <p class="text-base text-gray-400 xl:text-center">&copy; 2026 Aura Çanta. Tüm hakları saklıdır.</p>
-            </div>
+            <p class="mt-8 text-center text-gray-400 text-sm">&copy; 2026 Aura Design. Tüm hakları saklıdır.</p>
         </div>
     </footer>
 
-    <!-- Product Modal Overlay -->
-    <div id="product-modal" class="fixed inset-0 z-50 modal-overlay flex items-center justify-center bg-gray-900/80 backdrop-blur-sm p-4 sm:p-6">
-        
-        <!-- Modal Content Container -->
+    <div id="product-modal" class="fixed inset-0 z-50 modal-overlay flex items-center justify-center bg-gray-900/80 backdrop-blur-sm p-4">
         <div class="modal-content relative bg-white w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
-            
-            <!-- Close Button -->
-            <button id="close-modal" class="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur hover:bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 transition-colors focus:outline-none">
+            <button id="close-modal" class="absolute top-4 right-4 z-10 p-2 bg-white/80 rounded-full text-gray-500 hover:text-gray-900">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
 
-            <!-- Image Gallery Section (Left/Top) -->
             <div class="w-full md:w-3/5 bg-gray-50 flex flex-col border-b md:border-b-0 md:border-r border-gray-200">
-                <!-- Main Large Image -->
-                <div class="flex-grow relative overflow-hidden aspect-square md:aspect-auto min-h-[300px]">
-                    <img id="modal-main-image" src="" alt="Main product view" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300">
+                <div class="flex-grow relative overflow-hidden aspect-square min-h-[300px]">
+                    <img id="modal-main-image" src="" alt="Ürün" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300">
                 </div>
-                
-                <!-- Thumbnails Strip -->
-                <div class="h-24 sm:h-32 bg-white p-4 flex gap-3 overflow-x-auto no-scrollbar border-t border-gray-100">
-                    <div id="modal-thumbnails" class="flex gap-3 min-w-max">
-                        <!-- Thumbnails injected by JS -->
-                    </div>
+                <div class="h-24 sm:h-32 bg-white p-4 flex gap-3 overflow-x-auto no-scrollbar border-t">
+                    <div id="modal-thumbnails" class="flex gap-3 min-w-max"></div>
                 </div>
             </div>
 
-            <!-- Product Details Section (Right/Bottom) -->
-            <div class="w-full md:w-2/5 p-6 sm:p-8 md:p-10 flex flex-col overflow-y-auto">
-                <div class="mb-2 text-sm font-medium text-gray-500 uppercase tracking-wider" id="modal-catalog-number">Kat: #000</div>
-                <h3 id="modal-title" class="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">Ürün Adı</h3>
-                <p id="modal-price" class="text-xl text-gray-700 mb-6 font-medium">0.00 ₺</p>
+            <div class="w-full md:w-2/5 p-6 sm:p-10 flex flex-col overflow-y-auto">
+                <div class="mb-2 text-xs font-semibold text-gray-400 uppercase tracking-widest" id="modal-catalog-number"></div>
+                <h3 id="modal-title" class="text-2xl font-semibold text-gray-900 mb-2"></h3>
+                <p id="modal-price" class="text-xl text-gray-700 mb-6 font-medium"></p>
+                <p id="modal-description" class="text-gray-500 text-sm leading-relaxed mb-6"></p>
                 
-                <div class="prose prose-sm text-gray-500 mb-8 flex-grow">
-                    <p id="modal-description">Detaylı açıklama buraya gelecek.</p>
-                    
-                    <h4 class="text-sm font-medium text-gray-900 mt-6 mb-2">Materyaller</h4>
-                    <ul class="list-disc pl-5 space-y-1 text-sm">
-                        <li>Birinci Sınıf Hakiki Deri</li>
-                        <li>Pirinç Aksesuarlar</li>
-                        <li>Pamuklu Kanvas Astar</li>
-                    </ul>
-                    
-                    <h4 class="text-sm font-medium text-gray-900 mt-6 mb-2">Boyutlar</h4>
-                    <p class="text-sm" id="modal-dimensions">G: 30cm x Y: 25cm x D: 10cm</p>
+                <div class="space-y-4 mb-8">
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-900 uppercase mb-2">Detaylar</h4>
+                        <ul class="text-sm text-gray-500 list-disc pl-5">
+                            <li>El Yapımı / Handcrafted</li>
+                            <li>Doğal Materyaller</li>
+                            <li>Özel Astar ve İç Cep</li>
+                        </ul>
+                    </div>
+                    <p class="text-sm text-gray-500" id="modal-dimensions"></p>
                 </div>
 
-                <!-- WhatsApp Order Button -->
-                <div class="mt-auto pt-6 border-t border-gray-100">
-                    <a id="modal-whatsapp-btn" href="#" target="_blank" class="w-full flex items-center justify-center px-6 py-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                        <i data-lucide="message-circle" class="w-5 h-5 mr-2"></i>
-                        WhatsApp ile Sipariş Ver
-                    </a>
-                    <p class="text-xs text-center text-gray-400 mt-3">Tıkladığınızda, önceden doldurulmuş bir sipariş mesajı ile WhatsApp açılacaktır.</p>
-                </div>
+                <a id="modal-whatsapp-btn" href="#" target="_blank" class="mt-auto w-full flex items-center justify-center px-6 py-4 rounded-xl text-white bg-green-600 hover:bg-green-700 transition-colors font-medium">
+                    <i data-lucide="message-circle" class="w-5 h-5 mr-2"></i>
+                    WhatsApp'tan Sipariş Ver
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
 
-        // --- Configuration ---
-        // REPLACE WITH YOUR ACTUAL WHATSAPP NUMBER (include country code, no + or spaces)
-        const WHATSAPP_NUMBER = "1234567890"; 
+        // WHATSAPP NUMARASI (Buraya kendi numaranızı girin)
+        const WHATSAPP_NUMBER = "905XXXXXXXXX"; 
 
-        // --- Mock Data: The Bag Catalog ---
-        // In a real scenario, this might come from an API or CMS
         const products = [
             {
                 id: 'A101',
                 name: 'El Örgüsü Hasır Tote',
                 price: '3,200 ₺',
                 description: 'Doğal malzemelerle özenle elde örülmüş, ahşap saplı ve deri detaylı tasarım çanta. Geniş iç hacmi, fermuarlı iç cebi ve kaliteli kanvas astarı ile yaz aylarında hem günlük kullanım hem de tatil kombinleriniz için mükemmel bir tamamlayıcıdır.',
-                dimensions: 'G: 38cm x Y: 28cm x D: 15cm',
+                dimensions: 'Boyut: 38cm x 28cm x 15cm',
                 images: [
-                    '1777274985494.png', // Lifestyle / Ana Görsel
-                    '1777274985703.jpg', // Ön Cephe
-                    '1777274985652.jpg', // Açılı Görünüm
-                    '1777274985404.png', // Şezlong / Konsept
-                    '1777274985677.jpg', // Yan Görünüm
-                    '1777274985554.jpg', // İç Hacim Açık
-                    '1777274985578.jpg'  // İç Detay / Marka
+                    '1777274985494.jpg', 
+                    '1777274985703.jpg', 
+                    '1777274985652.jpg', 
+                    '1777274985404.jpg', 
+                    '1777274985677.jpg', 
+                    '1777274985554.jpg', 
+                    '1777274985578.jpg'
                 ]
             },
             {
                 id: 'C205',
-                name: 'Kazayağı Desenli Örgü Portföy',
+                name: 'Kazayağı Desenli Portföy',
                 price: '2,450 ₺',
-                description: 'Siyah beyaz kazayağı desenli, tamamen el örgüsü modern portföy çanta. Kaliteli deri ağız detayı ve çarpıcı deseniyle özel davetlerden günlük şehir stiline kadar her anınızda tarzınızı öne çıkarır. Zarif ve dikkat çekici bir tasarıma sahiptir.',
-                dimensions: 'G: 32cm x Y: 20cm x D: 12cm',
+                description: 'Siyah beyaz kazayağı desenli, tamamen el örgüsü modern portföy çanta. Kaliteli deri ağız detayı ve çarpıcı deseniyle özel davetlerden günlük şehir stiline kadar tarzınızı öne çıkarır.',
+                dimensions: 'Boyut: 32cm x 20cm x 12cm',
                 images: [
-                    '1777275045853.png', // Lifestyle Sokak Stili
-                    '1777275045958.png', // Lifestyle Elbise Kombini
-                    '1777275045988.jpg', // Ön Görünüm
-                    '1777275046021.jpg'  // Üstten İç Görünüm / Deri Detay
+                    '1777275045853.png', 
+                    '1777275045958.png', 
+                    '1777275045988.jpg', 
+                    '1777275046021.jpg'
                 ]
             },
             {
                 id: 'B312',
                 name: 'Makrome Omuz Çantası',
                 price: '2,100 ₺',
-                description: 'Geleneksel makrome el işçiliği ile modern tasarımın buluştuğu şık omuz çantası. Günlük stilinize bohem ve zarif bir dokunuş katmak için özenle dokunmuştur. Astarı ve rahat askısı ile günlük kullanımda pratik bir şıklık sunar.',
-                dimensions: 'G: 25cm x Y: 22cm x D: 8cm',
+                description: 'Geleneksel makrome el işçiliği ile modern tasarımın buluştuğu şık omuz çantası. Günlük stilinize bohem ve zarif bir dokunuş katar. Astarı ve rahat askısı ile pratik şıklık sunar.',
+                dimensions: 'Boyut: 25cm x 22cm x 8cm',
                 images: [
                     '1777274796338.jpg',
                     '1777274796367.jpg',
@@ -285,194 +247,88 @@
                     '1777274796454.jpg'
                 ]
             },
-             {
-                id: 'T409',
-                name: 'Günlük Hobo Çanta',
-                price: '2,600 ₺',
-                description: 'Zahmetsizce şık. Bu formsuz hobo çanta taşındığında güzelce dökümlü durur. Geniş, rahat bir omuz askısına ve oldukça ferah astarsız bir iç kısma sahiptir.',
-                dimensions: 'G: 40cm x Y: 33cm x D: 15cm',
-                images: [
-                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80'
-                ]
-            },
             {
-                id: 'C550',
-                name: 'Zarf Portföy Çanta',
-                price: '1,450 ₺',
-                description: 'Şık, ince ve sofistike. Sadece temel ihtiyaçlar için tasarlandı. Gizli bir manyetik çıtçıtı ve eller serbest kullanım için isteğe bağlı narin bir zincir askısı bulunur.',
-                dimensions: 'G: 28cm x Y: 15cm x D: 4cm',
+                id: 'D401',
+                name: 'Boncuk Saplı Bohem Yelpaze',
+                price: '2,950 ₺',
+                description: 'Doğal tonlarda el örgüsü işçiliği ve karakteristik ahşap boncuk saplarıyla öne çıkan yelpaze formlu tasarım. Geniş iç hacmi ve şık duruşuyla hem plajda hem de şehirde tarzınızı tamamlar. Fermuarlı iç cebi ve kaliteli astarı ile güvenli ve konforlu bir kullanım sunar.',
+                dimensions: 'Boyut: 48cm x 32cm (Halka sap dahil)',
                 images: [
-                    'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80'
-                ]
-            },
-            {
-                id: 'M621',
-                name: 'Mini Kova Çanta',
-                price: '1,950 ₺',
-                description: 'Klasik bir silüete eğlenceli bir yaklaşım. Mini kova çanta, büzme ipli bir kapağa ve sağlam bir tabana sahiptir. Hem kısa bir sap hem de çapraz bir askı ile birlikte gelir.',
-                dimensions: 'G: 16.5cm x Y: 19cm x D: 12.5cm',
-                images: [
-                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
-                    'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=800&q=80'
+                    '1777275145888.jpg', 
+                    '1777275146056.jpg', 
+                    '1777275146162.jpg', 
+                    '1777275146194.jpg', 
+                    '1777275146231.jpg', 
+                    '1777275146312.jpg', 
+                    '1777275146387.jpg', 
+                    '1777275146445.jpg', 
+                    '1777275146487.jpg', 
+                    '1777275146521.jpg'
                 ]
             }
         ];
 
-        // --- DOM Elements ---
-        const productGrid = document.getElementById('product-grid');
-        const modal = document.getElementById('product-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-        const modalMainImage = document.getElementById('modal-main-image');
-        const modalThumbnails = document.getElementById('modal-thumbnails');
-        const modalTitle = document.getElementById('modal-title');
-        const modalCatalogNumber = document.getElementById('modal-catalog-number');
-        const modalPrice = document.getElementById('modal-price');
-        const modalDescription = document.getElementById('modal-description');
-        const modalDimensions = document.getElementById('modal-dimensions');
-        const modalWhatsappBtn = document.getElementById('modal-whatsapp-btn');
-
-        // --- Functions ---
-
-        // Function to create WhatsApp link
-        function getWhatsAppLink(productName, catalogId) {
-            const message = `Merhaba! Kataloğunuzdan bir çanta siparişi vermek istiyorum.\n\n*Ürün:* ${productName}\n*Katalog Numarası:* ${catalogId}\n\nStok durumu ve kargo hakkında bilgi alabilir miyim?`;
-            const encodedMessage = encodeURIComponent(message);
-            return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
-        }
-
-        // Render products into the grid
         function renderProducts() {
-            productGrid.innerHTML = ''; // Clear existing
-            
-            products.forEach((product, index) => {
-                // Create a card for each product
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            products.forEach(p => {
                 const card = document.createElement('div');
-                card.className = 'group relative product-card flex flex-col cursor-pointer bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100';
-                
-                // Add click listener to open modal with this product's data
-                card.onclick = () => openModal(product);
-
-                // Card HTML structure
+                card.className = 'group product-card cursor-pointer bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-xl transition-all';
+                card.onclick = () => openModal(p);
                 card.innerHTML = `
-                    <div class="relative w-full aspect-[4/5] bg-gray-100 rounded-xl overflow-hidden mb-4">
-                        <img src="${product.images[0]}" alt="${product.name}" class="product-card-image absolute inset-0 w-full h-full object-cover object-center">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md text-xs font-semibold tracking-wider text-gray-800 shadow-sm border border-gray-100">
-                            #${product.id}
-                        </div>
-                        <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300"></div>
+                    <div class="relative aspect-[4/5] bg-gray-50 rounded-xl overflow-hidden mb-4">
+                        <img src="${p.images[0]}" class="product-card-image absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-white/90 px-2 py-1 rounded text-[10px] font-bold tracking-tighter text-gray-800 shadow-sm">#${p.id}</div>
                     </div>
-                    <div class="flex flex-col flex-grow px-2">
-                        <h3 class="text-lg font-medium text-gray-900 line-clamp-1">${product.name}</h3>
-                        <p class="mt-1 text-sm text-gray-500 line-clamp-2 mb-4">${product.description}</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <span class="text-lg font-semibold text-gray-900">${product.price}</span>
-                            <span class="inline-flex items-center text-sm font-medium text-indigo-600 group-hover:text-indigo-800 transition-colors">
-                                Detayları Gör <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
-                            </span>
+                    <div class="px-2">
+                        <h3 class="text-md font-semibold text-gray-900">${p.name}</h3>
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-lg font-bold text-gray-900">${p.price}</span>
+                            <span class="text-xs text-indigo-600 font-medium group-hover:underline">İncele</span>
                         </div>
                     </div>
                 `;
-                productGrid.appendChild(card);
+                grid.appendChild(card);
             });
-            
-            // Re-initialize icons for newly added HTML
-            lucide.createIcons();
         }
 
-        // Open Modal and populate data
-        function openModal(product) {
-            // Populate Text Data
-            modalTitle.textContent = product.name;
-            modalCatalogNumber.textContent = `Katalog: #${product.id}`;
-            modalPrice.textContent = product.price;
-            modalDescription.textContent = product.description;
-            modalDimensions.textContent = product.dimensions;
+        function openModal(p) {
+            document.getElementById('modal-title').textContent = p.name;
+            document.getElementById('modal-catalog-number').textContent = `KATALOG: #${p.id}`;
+            document.getElementById('modal-price').textContent = p.price;
+            document.getElementById('modal-description').textContent = p.description;
+            document.getElementById('modal-dimensions').textContent = p.dimensions;
             
-            // Set WhatsApp Link
-            modalWhatsappBtn.href = getWhatsAppLink(product.name, product.id);
+            const msg = `Merhaba, bu ürünü sipariş vermek istiyorum:\n\nÜrün: ${p.name}\nNo: ${p.id}`;
+            document.getElementById('modal-whatsapp-btn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 
-            // Populate Images
-            modalMainImage.src = product.images[0];
-            modalMainImage.style.opacity = 1; // Ensure it's visible initially
+            const mainImg = document.getElementById('modal-main-image');
+            mainImg.src = p.images[0];
             
-            modalThumbnails.innerHTML = ''; // Clear old thumbnails
-            
-            product.images.forEach((imgSrc, index) => {
-                const thumbBtn = document.createElement('button');
-                // Styling for thumbnail: unselected state
-                thumbBtn.className = `relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all focus:outline-none ${index === 0 ? 'border-gray-900 ring-2 ring-offset-1 ring-gray-200' : 'border-transparent hover:border-gray-300'}`;
-                
-                thumbBtn.innerHTML = `<img src="${imgSrc}" class="w-full h-full object-cover" alt="Thumbnail ${index + 1}">`;
-                
-                thumbBtn.onclick = (e) => {
-                    // Update main image with a slight fade effect
-                    modalMainImage.style.opacity = 0.5;
-                    setTimeout(() => {
-                        modalMainImage.src = imgSrc;
-                        modalMainImage.style.opacity = 1;
-                    }, 150);
-
-                    // Update active state styling on thumbnails
-                    Array.from(modalThumbnails.children).forEach(btn => {
-                        btn.className = 'relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 border-transparent hover:border-gray-300 transition-all focus:outline-none';
-                    });
-                    e.currentTarget.className = 'relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 border-gray-900 ring-2 ring-offset-1 ring-gray-200 transition-all focus:outline-none';
+            const thumbs = document.getElementById('modal-thumbnails');
+            thumbs.innerHTML = '';
+            p.images.forEach((img, i) => {
+                const btn = document.createElement('button');
+                btn.className = `w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 ${i===0 ? 'border-gray-900' : 'border-transparent'}`;
+                btn.innerHTML = `<img src="${img}" class="w-full h-full object-cover">`;
+                btn.onclick = () => {
+                    mainImg.src = img;
+                    Array.from(thumbs.children).forEach(b => b.classList.replace('border-gray-900', 'border-transparent'));
+                    btn.classList.replace('border-transparent', 'border-gray-900');
                 };
-                
-                modalThumbnails.appendChild(thumbBtn);
+                thumbs.appendChild(btn);
             });
 
-            // Show Modal
-            modal.classList.add('active');
+            document.getElementById('product-modal').classList.add('active');
             document.body.classList.add('modal-open');
         }
 
-        // Close Modal
-        function closeModal() {
-            modal.classList.remove('active');
+        document.getElementById('close-modal').onclick = () => {
+            document.getElementById('product-modal').classList.remove('active');
             document.body.classList.remove('modal-open');
-        }
+        };
 
-        // --- Event Listeners ---
-        
-        // Close modal on close button click
-        closeModalBtn.addEventListener('click', closeModal);
-        
-        // Close modal when clicking outside the content area (on the overlay)
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Close modal on Escape key press
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
-            }
-        });
-
-        // Prevent modal content clicks from closing the modal
-        document.querySelector('.modal-content').addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-
-        // Initialize Catalog on load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderProducts();
-        });
-
+        window.onload = renderProducts;
     </script>
 </body>
 </html>
